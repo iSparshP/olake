@@ -6,6 +6,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/constants"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
+	"github.com/datazip-inc/olake/tests/testutils/performance"
 	"github.com/stretchr/testify/require"
 )
 
@@ -58,18 +59,18 @@ func TestMySQL2PC(t *testing.T) {
 	mysqlBaseConfig(t).Test2PCIntegration(t)
 }
 
-// func TestMySQLPerformance(t *testing.T) {
-// 	cfg, err := testutils.NewTestConfig(constants.MySQL, "benchmark", "", ExecuteQuery, "")
-// 	require.NoError(t, err, "failed to build the test config")
+func TestMySQLPerformance(t *testing.T) {
+	cfg, err := testutils.NewTestConfig(t, constants.MySQL, "benchmark", "", ExecuteQuery)
+	require.NoError(t, err, "failed to build the test config")
 
-// 	perf := &performance.Test{
-// 		TestConfig:      cfg,
-// 		BackfillStreams: performance.GetBackfillStreamsFromCDC(performanceCDCStreams),
-// 		CDCStreams:      performanceCDCStreams,
-// 	}
+	perf := &performance.Test{
+		TestConfig:      cfg,
+		BackfillStreams: performance.GetBackfillStreamsFromCDC(performanceCDCStreams),
+		CDCStreams:      performanceCDCStreams,
+	}
 
-// 	perf.TestPerformance(t)
-// }
+	perf.TestPerformance(t)
+}
 
 // TestMySQLCompatibility pins the backward-compatibility contract for the driver that owns three of the
 // six version gates -- the binlog timestamp location (v2), the timezone offset (v3) and the

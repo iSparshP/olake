@@ -6,6 +6,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/constants"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
+	"github.com/datazip-inc/olake/tests/testutils/performance"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 )
@@ -59,18 +60,18 @@ func TestPostgres2PC(t *testing.T) {
 	postgresBaseConfig(t).Test2PCIntegration(t)
 }
 
-// func TestPostgresPerformance(t *testing.T) {
-// 	cfg, err := testutils.NewTestConfig(constants.Postgres, "public", "", ExecuteQuery, "")
-// 	require.NoError(t, err, "failed to build the test config")
+func TestPostgresPerformance(t *testing.T) {
+	cfg, err := testutils.NewTestConfig(t, constants.Postgres, "public", "", ExecuteQuery)
+	require.NoError(t, err, "failed to build the test config")
 
-// 	perf := &performance.Test{
-// 		TestConfig:      cfg,
-// 		BackfillStreams: performance.GetBackfillStreamsFromCDC(performanceCDCStreams),
-// 		CDCStreams:      performanceCDCStreams,
-// 	}
+	perf := &performance.Test{
+		TestConfig:      cfg,
+		BackfillStreams: performance.GetBackfillStreamsFromCDC(performanceCDCStreams),
+		CDCStreams:      performanceCDCStreams,
+	}
 
-// 	perf.TestPerformance(t)
-// }
+	perf.TestPerformance(t)
+}
 
 // TestPostgresCompatibility pins the backward-compatibility contract: the same scenarios run twice in
 // parallel -- once entirely on a released baseline image, once handing off to this build after the

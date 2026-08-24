@@ -3,6 +3,7 @@ package testutils
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -264,7 +265,7 @@ func (c *TestConfig) applySuite() error {
 		}
 		return c.sourceEdit(c, source)
 	}
-	if err := c.renderConfig("source.template.json", "source.json", isolateSource); err != nil {
+	if err := c.getOrRenderConfig("source.template.json", "source.json", isolateSource); err != nil {
 		return fmt.Errorf("failed to isolate the source config of driver %q for suite %q: %s", c.Driver, c.Suite, err)
 	}
 
@@ -274,9 +275,20 @@ func (c *TestConfig) applySuite() error {
 		}
 		return c.streamEdit(c, catalog)
 	}
-	if err := c.renderConfig("streams.template.json", "streams.json", isolateCatalog); err != nil {
+	if err := c.getOrRenderConfig("streams.template.json", "streams.json", isolateCatalog); err != nil {
 		return fmt.Errorf("failed to retarget the catalog of driver %q at suite %q table %s: %s", c.Driver, c.Suite, c.GetTableName(), err)
 	}
+	return nil
+}
+
+func (c *TestConfig) getOrRenderConfig(template, configPath string, edit editFunc) error {
+	_, err := os.Stat(c.GetFilePath(configPath))
+	if errors.Is(err, os.ErrNotExist) {
+		return c.renderConfig(template, configPath, edit)
+	} else if err != nil {
+		return err
+	}
+
 	return nil
 }
 
