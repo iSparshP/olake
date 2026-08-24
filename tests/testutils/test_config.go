@@ -201,7 +201,7 @@ func (c *TestConfig) withSuite(base string) string {
 // TestTableName is the source table a suite drives. The suite suffix is what keeps concurrent
 // suites off each other's table -- without it they race the same DROP/CREATE.
 func (c *TestConfig) GetTableName() string {
-	return Combine(c.Suite, "test_table_olake")
+	return Combine("test_table_olake", c.Suite)
 }
 
 // GetFilePath addresses a file in the suite's working directory by name -- the configs, the
