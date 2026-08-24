@@ -94,17 +94,19 @@ jobs:
           key: ${{ runner.os }}-aptwarm-${{ hashFiles('Dockerfile') }}
           lookup-only: true
 
-  # The run's single approval. This is used for reducing the noise of "requested a deployment" for each driver in PR
-  # This has a check for attempt number so re-running the tests will need separate deployment approval
+  # The run's single approval, last before the matrix so a pre-job failure fails or skips it too --
+  # then any re-run re-executes it, and every attempt that reaches the drivers prompts exactly once.
   approve:
     name: Approve integration tests
-    needs: preflight
+    needs: [preflight, build-jar, apt-warm]
+    if: ${{ !cancelled() && needs.preflight.result == 'success' && needs.build-jar.result != 'failure' && needs.apt-warm.result != 'failure' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    # Only a pull request's first attempt is gated; a push or a replay binds no environment.
-    environment: ${{ github.event_name == 'pull_request' && github.run_attempt == '1' && 'integration_tests' || '' }}
+    environment: ${{ github.event_name == 'pull_request' && 'integration_tests' || '' }}
+    outputs:
+      attempt: ${{ github.run_attempt }}
     steps:
-      - run: echo "Running the driver matrix."
+      - run: echo "Approved -- running the driver matrix."
 
   # Only when the jar is missing: preflight already looked up the cache, so an unchanged writer
   # skips Maven and this whole job.
@@ -220,15 +222,10 @@ jobs:
   # plus destination stack, builds its own image and runs every suite for that driver.
   integration-tests:
     name: Test ${{ matrix.driver }}
-    needs: [preflight, approve, build-jar, apt-warm, go-cache]
-    # Every need above this can legitimately be skipped, and a skipped need would otherwise skip
-    # this too -- so gate on "not failed" rather than on success. go-cache is exempt entirely: its
-    # cache warm and db2 clidriver download must not block seven drivers, and its lint and gosec
-    # failures already surface as their own check.
-    if: ${{ !cancelled() && needs.preflight.result == 'success' && needs.approve.result == 'success' && needs.build-jar.result != 'failure' && needs.apt-warm.result != 'failure' }}
+    needs: [preflight, approve, go-cache]
+    if: ${{ !cancelled() && needs.approve.result == 'success' }}
     runs-on: 16gb-runner
-    # Only a replay gates per leg; an empty expression binds no environment (actions/runner#2610).
-    environment: ${{ github.event_name == 'pull_request' && github.run_attempt != '1' && 'integration_tests' || '' }}
+    environment: ${{ github.event_name == 'pull_request' && needs.approve.outputs.attempt != github.run_attempt && 'integration_tests' || '' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
