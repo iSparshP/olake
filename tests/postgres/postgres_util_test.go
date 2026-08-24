@@ -10,8 +10,8 @@ import (
 	"github.com/apache/arrow-go/v18/arrow"
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
-	"github.com/jmoiron/sqlx"
 	"github.com/datazip-inc/olake/tests/testutils/require"
+	"github.com/jmoiron/sqlx"
 )
 
 const (

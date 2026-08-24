@@ -10,9 +10,9 @@ import (
 
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/constants"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 	"github.com/minio/minio-go/v7"
 	pqgo "github.com/parquet-go/parquet-go"
-	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 const (

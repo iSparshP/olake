@@ -8,9 +8,9 @@ import (
 
 	"github.com/apache/arrow-go/v18/arrow"
 	"github.com/datazip-inc/olake/tests/testutils"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 	"github.com/jmoiron/sqlx"
 	go_ora "github.com/sijms/go-ora/v2"
-	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // connectionString builds the go-ora URL from source.json. It mirrors the oracle driver's own

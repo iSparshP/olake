@@ -10,9 +10,9 @@ import (
 
 	"github.com/apache/arrow-go/v18/arrow"
 	"github.com/datazip-inc/olake/tests/testutils"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // performanceCDCStreams is the CDC stream set the performance suite drives, shared between the
