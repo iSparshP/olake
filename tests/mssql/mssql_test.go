@@ -6,7 +6,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/constants"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // mssqlBaseConfig returns an IntegrationTest pre-populated with all fields shared

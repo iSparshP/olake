@@ -13,7 +13,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/microsoft/go-mssqldb"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // cdcMetadataMu serializes CDC enable/disable: both write the server-wide msdb.dbo.cdc_jobs, so two

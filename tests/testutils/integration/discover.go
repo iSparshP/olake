@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/datazip-inc/olake/tests/testutils"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // Its caller must not be parallel. The compare is an equality one, so it only holds while this

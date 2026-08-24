@@ -24,7 +24,7 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	pq "github.com/parquet-go/parquet-go"
 	"github.com/parquet-go/parquet-go/deprecated"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // The S3 integration test reuses the MinIO instance from the Iceberg destination stack

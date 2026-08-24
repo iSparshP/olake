@@ -15,7 +15,7 @@ import (
 	"github.com/apache/arrow-go/v18/arrow"
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/linkedin/goavro/v2"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 	"github.com/twmb/franz-go/pkg/kadm"
 	"github.com/twmb/franz-go/pkg/kerr"
 	"github.com/twmb/franz-go/pkg/kgo"

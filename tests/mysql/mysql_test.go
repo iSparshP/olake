@@ -7,7 +7,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils/constants"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
 	"github.com/datazip-inc/olake/tests/testutils/performance"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // mysqlBaseConfig returns an IntegrationTest pre-populated with all fields shared

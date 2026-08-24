@@ -9,7 +9,7 @@ import (
 
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/constants"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 const icebergDestinationFile = "iceberg_destination.json"

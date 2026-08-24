@@ -12,7 +12,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	_ "github.com/ibmdb/go_ibm_db"
 	"github.com/jmoiron/sqlx"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 var (

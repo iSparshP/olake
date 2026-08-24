@@ -8,7 +8,7 @@ import (
 
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // waitForSyncProgress blocks until the running sync has reported its first records in stats.json,

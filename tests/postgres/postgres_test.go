@@ -8,7 +8,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils/integration"
 	"github.com/datazip-inc/olake/tests/testutils/performance"
 	_ "github.com/lib/pq"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // postgresBaseConfig returns an IntegrationTest pre-populated with all fields shared

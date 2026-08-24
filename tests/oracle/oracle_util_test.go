@@ -10,7 +10,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/jmoiron/sqlx"
 	go_ora "github.com/sijms/go-ora/v2"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // connectionString builds the go-ora URL from source.json. It mirrors the oracle driver's own

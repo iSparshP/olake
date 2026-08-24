@@ -12,7 +12,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // performanceCDCStreams is the CDC stream set the performance suite drives, shared between the

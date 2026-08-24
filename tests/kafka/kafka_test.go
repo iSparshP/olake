@@ -6,7 +6,7 @@ import (
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/constants"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 type kafkaFormat struct {

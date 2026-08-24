@@ -9,7 +9,7 @@ import (
 
 	"github.com/apache/arrow-go/v18/arrow"
 	"github.com/datazip-inc/olake/tests/testutils"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

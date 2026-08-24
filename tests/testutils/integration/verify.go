@@ -12,7 +12,7 @@ import (
 	"github.com/apache/spark-connect-go/v35/spark/sql/types"
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/constants"
-	"github.com/stretchr/testify/require"
+	"github.com/datazip-inc/olake/tests/testutils/require"
 )
 
 // TODO: Refactor parsing logic into a reusable utility functions
