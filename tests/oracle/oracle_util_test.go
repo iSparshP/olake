@@ -29,7 +29,7 @@ func connectionString(config testutils.SourceConfig) string {
 	}
 	quotedUsername := fmt.Sprintf("%q", config.String("username"))
 	return go_ora.BuildUrl(
-		config.String("host"),
+		config.Host("host"),
 		config.Int("port"),
 		config.String("service_name"),
 		quotedUsername,
@@ -41,12 +41,7 @@ func connectionString(config testutils.SourceConfig) string {
 func ExecuteQuery(ctx context.Context, t *testing.T, conf *testutils.TestConfig, operation string) {
 	t.Helper()
 
-	var connStr string
-	if conf.SourceBaseConfig != nil {
-		connStr = connectionString(conf.SourceBaseConfig)
-	} else {
-		connStr = "oracle://myuser:secret1234@localhost:1521/orcl"
-	}
+	connStr := connectionString(conf.SourceBaseConfig)
 
 	db, err := sqlx.ConnectContext(ctx, "oracle", connStr)
 	require.NoError(t, err, "failed to connect to oracle")
@@ -54,7 +49,7 @@ func ExecuteQuery(ctx context.Context, t *testing.T, conf *testutils.TestConfig,
 		require.NoError(t, db.Close())
 	}()
 
-	integrationTestTable := testutils.TestTableName(conf)
+	integrationTestTable := conf.GetTableName()
 	var query string
 
 	switch operation {
