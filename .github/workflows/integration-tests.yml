@@ -98,8 +98,8 @@ jobs:
   # then any re-run re-executes it, and every attempt that reaches the drivers prompts exactly once.
   approve:
     name: Approve integration tests
-    needs: [preflight, build-jar, apt-warm]
-    if: ${{ !cancelled() && needs.preflight.result == 'success' && needs.build-jar.result != 'failure' && needs.apt-warm.result != 'failure' }}
+    needs: [preflight, build-jar, apt-warm, go-cache]
+    if: ${{ !cancelled() && needs.preflight.result == 'success' && needs.build-jar.result != 'failure' && needs.apt-warm.result != 'failure' && needs.go-cache.result != 'failure' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment: ${{ github.event_name == 'pull_request' && 'integration_tests' || '' }}
@@ -222,7 +222,7 @@ jobs:
   # plus destination stack, builds its own image and runs every suite for that driver.
   integration-tests:
     name: Test ${{ matrix.driver }}
-    needs: [preflight, approve, go-cache]
+    needs: [preflight, approve]
     if: ${{ !cancelled() && needs.approve.result == 'success' }}
     runs-on: 16gb-runner
     environment: ${{ github.event_name == 'pull_request' && needs.approve.outputs.attempt != github.run_attempt && 'integration_tests' || '' }}
