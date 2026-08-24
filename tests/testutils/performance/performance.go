@@ -139,9 +139,10 @@ func (cfg *Test) discoverStreams(ctx context.Context, streams []string) error {
 	return nil
 }
 
-// destinationPrefix names the destination database every phase writes into.
+// destinationPrefix names the destination database every phase writes into. The literal order is
+// load-bearing: the CI role's Glue policy is scoped to performance_* databases.
 func (cfg *Test) destinationPrefix() []string {
-	return []string{"--destination-database-prefix", cfg.UniqueID()}
+	return []string{"--destination-database-prefix", fmt.Sprintf("performance_%s", cfg.Driver)}
 }
 
 // runOlake runs the driver image with host networking so the benchmark reaches the external
