@@ -10,6 +10,7 @@ import (
 	"github.com/apache/arrow-go/v18/arrow"
 	"github.com/datazip-inc/olake/tests/testutils"
 	"github.com/datazip-inc/olake/tests/testutils/integration"
+	"github.com/datazip-inc/olake/tests/testutils/performance"
 	"github.com/datazip-inc/olake/tests/testutils/require"
 	"github.com/jmoiron/sqlx"
 )
@@ -270,27 +271,27 @@ func ExecuteQuery(ctx context.Context, t *testing.T, conf *testutils.TestConfig,
 
 	case "bulk_cdc_data_insert":
 		// insert records in batches
-		// batchSize := 300_000
-		// totalRows := 15_000_000
-		// backfillStreams := performance.GetBackfillStreamsFromCDC(performanceCDCStreams)
+		batchSize := 300_000
+		totalRows := 15_000_000
+		backfillStreams := performance.GetBackfillStreamsFromCDC(performanceCDCStreams)
 
-		// err := testutils.Concurrent(ctx, performanceCDCStreams, len(performanceCDCStreams), func(ctx context.Context, cdcStream string, executionNumber int) error {
-		// 	for offset := 0; offset < totalRows; offset += batchSize {
-		// 		query := fmt.Sprintf(
-		// 			`INSERT INTO %s
-		// 			 SELECT * FROM %s
-		// 			 ORDER BY id
-		// 			 LIMIT %d OFFSET %d`,
-		// 			cdcStream, backfillStreams[executionNumber], batchSize, offset,
-		// 		)
-		// 		if _, err := db.ExecContext(ctx, query); err != nil {
-		// 			return fmt.Errorf("stream: %s, offset: %d, error: %s", cdcStream, offset, err)
-		// 		}
-		// 	}
-		// 	return nil
-		// })
-		// require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
-		// return
+		err := testutils.Concurrent(ctx, performanceCDCStreams, len(performanceCDCStreams), func(ctx context.Context, cdcStream string, executionNumber int) error {
+			for offset := 0; offset < totalRows; offset += batchSize {
+				query := fmt.Sprintf(
+					`INSERT INTO %s
+					 SELECT * FROM %s
+					 ORDER BY id
+					 LIMIT %d OFFSET %d`,
+					cdcStream, backfillStreams[executionNumber], batchSize, offset,
+				)
+				if _, err := db.ExecContext(ctx, query); err != nil {
+					return fmt.Errorf("stream: %s, offset: %d, error: %s", cdcStream, offset, err)
+				}
+			}
+			return nil
+		})
+		require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
+		return
 
 	case "evolve-schema":
 		query = fmt.Sprintf(`ALTER TABLE %s ALTER COLUMN col_int TYPE BIGINT, ALTER COLUMN col_float4 TYPE FLOAT, ADD COLUMN includedColumn INTEGER`, integrationTestTable)

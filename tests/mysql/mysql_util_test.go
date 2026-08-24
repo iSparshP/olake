@@ -10,6 +10,7 @@ import (
 
 	"github.com/apache/arrow-go/v18/arrow"
 	"github.com/datazip-inc/olake/tests/testutils"
+	"github.com/datazip-inc/olake/tests/testutils/performance"
 	"github.com/datazip-inc/olake/tests/testutils/require"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -310,16 +311,16 @@ func ExecuteQueryExcluding(ctx context.Context, t *testing.T, conf *testutils.Te
 		query = fmt.Sprintf("DELETE FROM %s WHERE id = 1", integrationTestTable)
 
 	case "setup_cdc":
-		// backfillStreams := performance.GetBackfillStreamsFromCDC(performanceCDCStreams)
-		// // truncate the cdc tables
-		// for idx, cdcStream := range performanceCDCStreams {
-		// 	_, err := db.ExecContext(ctx, fmt.Sprintf("TRUNCATE TABLE %s", cdcStream))
-		// 	require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
-		// 	// mysql chunking strategy does not support 0 record sync
-		// 	_, err = db.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s SELECT * FROM %s WHERE id > 15000000 LIMIT 1", cdcStream, backfillStreams[idx]))
-		// 	require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
-		// }
-		// return
+		backfillStreams := performance.GetBackfillStreamsFromCDC(performanceCDCStreams)
+		// truncate the cdc tables
+		for idx, cdcStream := range performanceCDCStreams {
+			_, err := db.ExecContext(ctx, fmt.Sprintf("TRUNCATE TABLE %s", cdcStream))
+			require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
+			// mysql chunking strategy does not support 0 record sync
+			_, err = db.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s SELECT * FROM %s WHERE id > 15000000 LIMIT 1", cdcStream, backfillStreams[idx]))
+			require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
+		}
+		return
 
 	case "reset_cdc_config":
 		cdcSettings := map[string]string{
@@ -334,17 +335,14 @@ func ExecuteQueryExcluding(ctx context.Context, t *testing.T, conf *testutils.Te
 		return
 
 	case "bulk_cdc_data_insert":
-		// backfillStreams := performance.GetBackfillStreamsFromCDC(performanceCDCStreams)
-		// // insert the data into the cdc tables concurrently
-		// err := testutils.Concurrent(ctx, performanceCDCStreams, len(performanceCDCStreams), func(ctx context.Context, cdcStream string, executionNumber int) error {
-		// 	_, err = db.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s SELECT * FROM %s LIMIT 15000000", cdcStream, backfillStreams[executionNumber]))
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// 	return nil
-		// })
-		// require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
-		// return
+		backfillStreams := performance.GetBackfillStreamsFromCDC(performanceCDCStreams)
+		// insert the data into the cdc tables concurrently
+		err := testutils.Concurrent(ctx, performanceCDCStreams, len(performanceCDCStreams), func(ctx context.Context, cdcStream string, executionNumber int) error {
+			_, err := db.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s SELECT * FROM %s LIMIT 15000000", cdcStream, backfillStreams[executionNumber]))
+			return err
+		})
+		require.NoError(t, err, fmt.Sprintf("failed to execute %s operation", operation), err)
+		return
 
 	case "evolve-schema":
 		query = fmt.Sprintf("ALTER TABLE %s MODIFY COLUMN id_int BIGINT, MODIFY COLUMN price_float DOUBLE, ADD COLUMN includedColumn INT;", integrationTestTable)
