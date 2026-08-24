@@ -52,6 +52,7 @@ func GetBackfillStreamsFromCDC(cdcStreams []string) []string {
 // destination, and a benchmark that races another sync measures the contention, not the driver.
 func (cfg *Test) TestPerformance(t *testing.T) {
 	cfg.validate(t)
+	cfg.Uncapped = true
 	ctx := t.Context()
 
 	// The CDC configuration a previous run left behind (a slot holding its own WAL, a binlog

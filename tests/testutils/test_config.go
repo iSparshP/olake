@@ -48,6 +48,10 @@ type TestConfig struct {
 	// it, so the harness and olake always drive the same source.
 	SourceBaseConfig SourceConfig `json:"-"`
 
+	// Uncapped lifts the container memory and writer-heap caps sized for concurrent integration
+	// suites; the performance suite runs one sync that must own the machine, like a deployed one.
+	Uncapped bool
+
 	// Driver shape: the same for every suite this driver runs, so it is declared once here
 	// rather than per test.
 	Namespace       string

@@ -149,10 +149,10 @@ func DockerRunArgs(cfg *TestConfig, image string, extraFlags []string, olakeArgs
 	// 75% of it -- measured at 5.82GiB on a 7.75GiB VM. olake starts one JVM per destination
 	// check, per backfill chunk and per CDC phase, so concurrent suites OOM-kill each other on a
 	// handful of rows. Capping the container makes the JVM container-aware instead.
-	if limit := containerMemoryLimit(cfg.Driver); limit != "" {
+	if limit := containerMemoryLimit(cfg.Driver); limit != "" && !cfg.Uncapped {
 		args = append(args, "--memory", limit, "--memory-swap", limit)
 	}
-	if heap := writerHeapOpts(cfg.Driver); heap != "" {
+	if heap := writerHeapOpts(cfg.Driver); heap != "" && !cfg.Uncapped {
 		args = append(args, "-e", "JAVA_TOOL_OPTIONS="+heap)
 	}
 
